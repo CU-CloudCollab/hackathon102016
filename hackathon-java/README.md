@@ -14,7 +14,7 @@ You can easily run a mysql database for development with:
 docker run --name mysql -d -e MYSQL_ROOT_PASSWORD=test -p 3306:3306 dtr.cucloud.net/hackathon/mysql
 ```
 
-This image has been configure specifically for the hackathon and will contain everything you need to run the starte project.
+This image has been configure specifically for the hackathon and will contain everything you need to run the starter project.
 You should run the database before running any tests.
 
 ## build
