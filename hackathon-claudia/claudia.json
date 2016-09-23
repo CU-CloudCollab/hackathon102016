@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "hackathon-claudia-executor",
+    "name": "hackathon-claudia",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "ymguminb5i",
+    "module": "app"
+  }
+}
