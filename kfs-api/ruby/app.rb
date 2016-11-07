@@ -14,6 +14,24 @@ class App < Sinatra::Base
     "<p>The site is up!</p>"
   end
 
+  get '/subaccounts/:account' do
+    content_type :json
+
+    dynamodb = Aws::DynamoDB::Client.new
+    resp = dynamodb.query({
+      table_name: "subaccounts", # required
+      index_name: "account_num-index",
+      key_conditions: {
+        "account_num" => {
+          attribute_value_list: [params[:account]],
+          comparison_operator: "EQ",
+        },
+      },
+    })
+
+    resp.items.to_json
+  end
+
   # IT-R74759--0500---
   get '/accounts/:id' do
     content_type :json
@@ -42,7 +60,7 @@ class App < Sinatra::Base
 
   def validate_account_num?(account_num)
     return false if account_num.empty?
-    #return false unless account_num.scan(/(?<=#)[[:alnum:]]+/).length > 0
+    return false unless account_num.scan /(?<=#)[[:alnum:]]+/
 
     dynamodb = Aws::DynamoDB::Client.new
     resp = dynamodb.get_item({
