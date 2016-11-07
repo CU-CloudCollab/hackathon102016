@@ -27,22 +27,22 @@ class App < Sinatra::Base
       halt 598, "{\"error\": \"account string too short\"}"
     end
 
-    if validate_account_num?(account_parts[1])
-      "{\"Success\": \"account string is awesome\"}"
-    else
-      "{\"error\": \"account string not valid\"}"
+    unless validate_account_num?(account_parts[1])
+      halt 598, "{\"error\": \"account string not valid\"}"
     end
 
-    if account_parts.length > 2 && validate_sub_account_num?(account_parts[2])
-      "{\"Success\": \"account string is awesome\"}"
-    else
-      "{\"error\": \"account string not valid\"}"
+    if account_parts.length > 2
+      unless validate_sub_account_num?(account_parts[2], account_parts[1])
+        halt 598, "{\"error\": \"subaccount string not valid\"}"
+      end
     end
+
+    "{\"Success\": \"account string is awesome\"}"
   end
 
   def validate_account_num?(account_num)
     return false if account_num.empty?
-    return false unless account_num.scan /(?<=#)[[:alnum:]]+/
+    #return false unless account_num.scan(/(?<=#)[[:alnum:]]+/).length > 0
 
     dynamodb = Aws::DynamoDB::Client.new
     resp = dynamodb.get_item({
@@ -53,7 +53,7 @@ class App < Sinatra::Base
       attributes_to_get: ["active"],
     })
 
-    resp.item["active"].eql?("Y")
+    !resp.item.nil? && resp.item["active"].eql?("Y")
   end
 
   def validate_sub_account_num?(sub_account_num, account_num)
@@ -69,7 +69,7 @@ class App < Sinatra::Base
       attributes_to_get: ["active"],
     })
 
-    resp.item["active"].eql?("Y")
+    !resp.item.nil? && resp.item["active"].eql?("Y")
   end
 
 end
