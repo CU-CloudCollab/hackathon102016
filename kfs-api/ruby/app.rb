@@ -6,7 +6,6 @@ require 'sinatra/activerecord'
 class App < Sinatra::Base
   Aws.config.update({
     region: 'us-east-1',
-    credentials: Aws::SharedCredentials.new(profile_name: "training")
   })
 
   set :bind, "0.0.0.0"

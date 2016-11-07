@@ -4,7 +4,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY Gemfile /app
-RUN bundle install --quiet
+RUN bundle install
 
 COPY . /app
 EXPOSE 5000
